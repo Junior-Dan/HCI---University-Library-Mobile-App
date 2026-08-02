@@ -1,0 +1,41 @@
+<svg viewBox="0 0 360 780" xmlns="http://www.w3.org/2000/svg" font-family="Helvetica, Arial, sans-serif">
+  <rect x="0" y="0" width="360" height="780" fill="#ffffff" stroke="#cccccc"/>
+
+  <text x="20" y="35" font-size="18" font-weight="bold" fill="#111111">Book Details</text>
+  <path d="M330 20 v18 l6 -6 l6 6 v-18 Z" fill="none" stroke="#333333" stroke-width="1.3"/>
+  <line x1="0" y1="50" x2="360" y2="50" stroke="#dddddd" stroke-width="1"/>
+
+  <!-- cover image -->
+  <rect x="130" y="75" width="100" height="130" fill="#ffffff" stroke="#333333" stroke-width="1.5"/>
+  <line x1="130" y1="75" x2="230" y2="205" stroke="#333333" stroke-width="1"/>
+  <line x1="230" y1="75" x2="130" y2="205" stroke="#333333" stroke-width="1"/>
+
+  <text x="180" y="240" text-anchor="middle" font-size="19" font-weight="bold" fill="#111111">The Great Adventure</text>
+  <text x="180" y="262" text-anchor="middle" font-size="13" fill="#666666">By Jane Doe</text>
+
+  <text x="180" y="286" text-anchor="middle" font-size="13" fill="#e0a500">&#9733; 4.5 (120 ratings)</text>
+
+  <text x="20" y="320" font-size="14" font-weight="bold" fill="#111111">Description</text>
+  <text x="20" y="340" font-size="12" fill="#555555">Lorem ipsum dolor sit amet, consectetur</text>
+  <text x="20" y="356" font-size="12" fill="#555555">adipiscing elit. Sed do eiusmod tempor</text>
+  <text x="20" y="372" font-size="12" fill="#555555">incididunt ut labore et dolore magna aliqua. Ut</text>
+  <text x="20" y="388" font-size="12" fill="#555555">enim ad minim veniam, quis nostrud exercitation</text>
+  <text x="20" y="404" font-size="12" fill="#555555">ullamco laboris nisi ut aliquip ex ea commodo</text>
+  <text x="20" y="420" font-size="12" fill="#555555">consequat.</text>
+
+  <text x="20" y="454" font-size="14" font-weight="bold" fill="#111111">Availability</text>
+  <text x="20" y="474" font-size="13" fill="#555555">Status: <tspan fill="#16A34A" font-weight="bold">Available</tspan></text>
+
+  <!-- Bottom nav -->
+  <line x1="0" y1="730" x2="360" y2="730" stroke="#dddddd" stroke-width="1"/>
+  <path d="M60 742 L70 734 L80 742 V756 H60 Z" fill="none" stroke="#666666" stroke-width="1.5"/>
+  <text x="70" y="770" text-anchor="middle" font-size="10" fill="#666666">Home</text>
+  <circle cx="140" cy="746" r="7" fill="none" stroke="#666666" stroke-width="1.3"/>
+  <line x1="145" y1="751" x2="150" y2="756" stroke="#666666" stroke-width="1.3"/>
+  <text x="140" y="770" text-anchor="middle" font-size="10" fill="#666666">Search</text>
+  <rect x="205" y="736" width="16" height="20" fill="none" stroke="#2563EB" stroke-width="1.5"/>
+  <text x="220" y="770" text-anchor="middle" font-size="10" fill="#2563EB" font-weight="bold">My Books</text>
+  <circle cx="305" cy="742" r="5" fill="none" stroke="#666666" stroke-width="1.3"/>
+  <path d="M295 758 Q305 746 315 758" fill="none" stroke="#666666" stroke-width="1.3"/>
+  <text x="305" y="770" text-anchor="middle" font-size="10" fill="#666666">Profile</text>
+</svg>
