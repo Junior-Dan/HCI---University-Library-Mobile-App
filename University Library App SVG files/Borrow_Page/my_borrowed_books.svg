@@ -1,0 +1,42 @@
+<svg viewBox="0 0 360 780" xmlns="http://www.w3.org/2000/svg" font-family="Helvetica, Arial, sans-serif">
+  <rect x="0" y="0" width="360" height="780" fill="#ffffff" stroke="#cccccc"/>
+
+  <path d="M20 30 l-8 8 l8 8" fill="none" stroke="#333333" stroke-width="1.5"/>
+  <text x="40" y="35" font-size="18" font-weight="bold" fill="#111111">My Borrowed Books</text>
+  <line x1="0" y1="50" x2="360" y2="50" stroke="#dddddd" stroke-width="1"/>
+
+  <!-- item 1 -->
+  <rect x="20" y="70" width="320" height="90" fill="#ffffff" stroke="#dddddd" stroke-width="1"/>
+  <rect x="32" y="82" width="50" height="66" fill="#ffffff" stroke="#333333" stroke-width="1"/>
+  <line x1="32" y1="82" x2="82" y2="148" stroke="#333333" stroke-width="0.8"/>
+  <line x1="82" y1="82" x2="32" y2="148" stroke="#333333" stroke-width="0.8"/>
+  <text x="94" y="100" font-size="14" font-weight="bold" fill="#111111">The Great Gatsby</text>
+  <text x="94" y="118" font-size="12" fill="#666666">F. Scott Fitzgerald</text>
+  <text x="94" y="135" font-size="12" fill="#555555">Due: <tspan fill="#cc7a00">2023-12-31</tspan></text>
+  <rect x="94" y="140" width="70" height="24" rx="4" fill="#eeeeee" stroke="#2563EB" stroke-width="1"/>
+  <text x="129" y="156" text-anchor="middle" font-size="11" fill="#2563EB">Renew</text>
+
+  <!-- item 2 -->
+  <rect x="20" y="172" width="320" height="90" fill="#ffffff" stroke="#dddddd" stroke-width="1"/>
+  <rect x="32" y="184" width="50" height="66" fill="#ffffff" stroke="#333333" stroke-width="1"/>
+  <line x1="32" y1="184" x2="82" y2="250" stroke="#333333" stroke-width="0.8"/>
+  <line x1="82" y1="184" x2="32" y2="250" stroke="#333333" stroke-width="0.8"/>
+  <text x="94" y="202" font-size="14" font-weight="bold" fill="#111111">1984</text>
+  <text x="94" y="220" font-size="12" fill="#666666">George Orwell</text>
+  <text x="94" y="237" font-size="12" fill="#555555">Due: <tspan fill="#2563EB">2024-01-15</tspan></text>
+  <rect x="94" y="242" width="70" height="24" rx="4" fill="#eeeeee" stroke="#2563EB" stroke-width="1"/>
+  <text x="129" y="258" text-anchor="middle" font-size="11" fill="#2563EB">Renew</text>
+
+  <text x="180" y="300" text-anchor="middle" font-size="11" fill="#999999">No more borrowed books</text>
+
+  <!-- Bottom nav -->
+  <line x1="0" y1="730" x2="360" y2="730" stroke="#dddddd" stroke-width="1"/>
+  <path d="M100 742 L110 734 L120 742 V756 H100 Z" fill="none" stroke="#666666" stroke-width="1.5"/>
+  <text x="110" y="770" text-anchor="middle" font-size="10" fill="#666666">Home</text>
+  <circle cx="180" cy="746" r="7" fill="none" stroke="#666666" stroke-width="1.3"/>
+  <line x1="185" y1="751" x2="190" y2="756" stroke="#666666" stroke-width="1.3"/>
+  <text x="180" y="770" text-anchor="middle" font-size="10" fill="#666666">Search</text>
+  <circle cx="255" cy="742" r="5" fill="none" stroke="#2563EB" stroke-width="1.5"/>
+  <path d="M245 758 Q255 746 265 758" fill="none" stroke="#2563EB" stroke-width="1.5"/>
+  <text x="255" y="770" text-anchor="middle" font-size="10" fill="#2563EB" font-weight="bold">Profile</text>
+</svg>
