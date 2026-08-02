@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Library App — Interactive Prototype</title>
+<style>
+  :root{
+    --blue:#2563EB;
+    --green:#16A34A;
+    --red:#cc3333;
+    --border:#dddddd;
+    --text:#111111;
+    --muted:#666666;
+    --bg-outer:#f0f1f3;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0; font-family:Helvetica, Arial, sans-serif;
+    background:var(--bg-outer);
+    display:flex; align-items:center; justify-content:center;
+    min-height:100vh; padding:24px;
+  }
+  .phone{
+    width:360px; height:780px; background:#ffffff;
+    border:10px solid #1a1a1a; border-radius:36px;
+    overflow:hidden; position:relative;
+    box-shadow:0 20px 50px rgba(0,0,0,0.25);
+  }
+  .screen{
+    position:absolute; inset:0; display:none;
+    flex-direction:column; overflow-y:auto; -webkit-overflow-scrolling:touch;
+  }
+  .screen.active{display:flex;}
+  .header{
+    display:flex; align-items:center; gap:10px;
+    padding:16px 20px 10px; border-bottom:1px solid var(--border);
+    flex-shrink:0;
+  }
+  .header h1{font-size:18px; margin:0; flex:1;}
+  .back{
+    width:20px; height:20px; cursor:pointer; border:none; background:none;
+    font-size:20px; color:var(--text); line-height:1; padding:0;
+  }
+  .icon-btn{border:none; background:none; cursor:pointer; font-size:18px; padding:0;}
+  .content{padding:16px 20px; flex:1;}
+  .placeholder-img{
+    background:repeating-linear-gradient(135deg,#fff,#fff 4px,#f2f2f2 4px,#f2f2f2 5px);
+    border:1.5px solid var(--text); position:relative;
+  }
+  .placeholder-img::before, .placeholder-img::after{
+    content:""; position:absolute; inset:0;
+  }
+  .placeholder-img::before{background:linear-gradient(to bottom right, transparent calc(50% - 0.5px), #333 calc(50% - 0.5px), #333 calc(50% + 0.5px), transparent calc(50% + 0.5px));}
+  .placeholder-img::after{background:linear-gradient(to top right, transparent calc(50% - 0.5px), #333 calc(50% - 0.5px), #333 calc(50% + 0.5px), transparent calc(50% + 0.5px));}
+
+  .btn{
+    display:block; width:100%; padding:13px; border-radius:6px; border:none;
+    font-size:14px; font-weight:bold; cursor:pointer; text-align:center; margin-top:10px;
+  }
+  .btn-primary{background:var(--blue); color:#fff;}
+  .btn-secondary{background:#eeeeee; color:#333; border:1px solid #999;}
+  .btn-danger-outline{background:#fff; color:var(--red); border:1px solid var(--red);}
+  .btn-small{width:auto; padding:6px 12px; font-size:11px; margin-top:0; border-radius:4px;}
+
+  .search-bar{
+    display:flex; align-items:center; gap:8px; background:#f0f0f0;
+    border:1px solid var(--border); border-radius:8px; padding:10px 12px;
+    color:#888; font-size:13px; cursor:pointer;
+  }
+
+  .book-row{display:flex; gap:12px; padding:12px 0; border-bottom:1px solid #f0f0f0; cursor:pointer;}
+  .book-row:last-child{border-bottom:none;}
+  .book-row .cover{width:50px; height:65px; flex-shrink:0;}
+  .book-row .info{flex:1;}
+  .book-row .title{font-weight:bold; font-size:13px; color:var(--text); margin:0 0 3px;}
+  .book-row .author{font-size:12px; color:var(--muted); margin:0 0 3px;}
+  .book-row .status{font-size:12px; color:var(--blue);}
+
+  .section-title{font-size:15px; font-weight:bold; margin:18px 0 4px;}
+  .section-title:first-child{margin-top:0;}
+
+  .navbar{
+    display:flex; border-top:1px solid var(--border); flex-shrink:0; background:#fff;
+  }
+  .navbar button{
+    flex:1; border:none; background:none; padding:8px 0 10px; cursor:pointer;
+    display:flex; flex-direction:column; align-items:center; gap:2px;
+    color:var(--muted); font-size:10px;
+  }
+  .navbar button.active{color:var(--blue); font-weight:bold;}
+  .navbar svg{width:20px; height:20px;}
+
+  .center-col{align-items:center; text-align:center; justify-content:center;}
+  .check-circle{
+    width:60px; height:60px; border-radius:50%; background:var(--green);
+    display:flex; align-items:center; justify-content:center; margin:0 auto 16px;
+  }
+  .check-circle svg{width:28px; height:28px;}
+
+  .card{border:1px solid var(--border); border-radius:6px; padding:12px; display:flex; gap:12px; margin:16px 0;}
+  .card .cover{width:45px; height:56px; flex-shrink:0;}
+
+  .list-item{
+    border:1px solid var(--border); border-radius:6px; padding:12px; display:flex; gap:12px; margin-bottom:12px;
+  }
+  .list-item .cover{width:50px; height:66px; flex-shrink:0;}
+  .list-item .info{flex:1;}
+
+  .notif-item{
+    border:1px solid var(--border); border-radius:6px; padding:12px 14px; margin-bottom:10px;
+  }
+  .notif-item.unread{background:#f5f8ff;}
+  .notif-title{display:flex; align-items:center; gap:6px; font-size:13px; font-weight:bold;}
+  .dot{width:8px; height:8px; border-radius:50%; background:var(--blue); flex-shrink:0;}
+  .notif-body{font-size:12px; color:var(--muted); margin:4px 0 4px;}
+  .notif-time{font-size:11px; color:#999;}
+
+  .settings-row{
+    display:flex; justify-content:space-between; align-items:center;
+    padding:14px 0; border-bottom:1px solid #f0f0f0; font-size:14px; cursor:default;
+  }
+  .rating{color:#e0a500; font-size:13px;}
+  .avatar{width:60px; height:60px; border-radius:50%; margin:0 auto 10px;}
+  .desc{font-size:12px; color:#555; line-height:1.6;}
+  .empty-hint{font-size:11px; color:#999; text-align:center; margin-top:10px;}
+  .toast{
+    position:absolute; bottom:100px; left:20px; right:20px; background:#111;
+    color:#fff; padding:10px 14px; border-radius:6px; font-size:12px; text-align:center;
+    opacity:0; pointer-events:none; transition:opacity .25s ease;
+  }
+  .toast.show{opacity:0.95;}
+</style>
+</head>
+<body>
+
+<div class="phone" id="phone">
+
+  <!-- 0: Splash -->
+  <div class="screen active center-col" id="screen-splash" onclick="go('welcome')" style="cursor:pointer;">
+    <div class="content center-col" style="display:flex; flex-direction:column; align-items:center; justify-content:center; height:100%;">
+      <div class="placeholder-img" style="width:100px;height:100px;margin-bottom:16px;"></div>
+      <h2 style="margin:0;">Library App</h2>
+      <p style="font-size:11px;color:#999;margin-top:24px;">tap to continue</p>
+    </div>
+  </div>
+
+  <!-- 1: Welcome -->
+  <div class="screen" id="screen-welcome">
+    <div class="content center-col" style="display:flex; flex-direction:column; align-items:center; justify-content:center; height:100%;">
+      <div class="placeholder-img" style="width:100px;height:120px;margin-bottom:24px;"></div>
+      <h1 style="font-size:22px;margin:0 0 12px;">Welcome to Our Library App!</h1>
+      <p class="desc" style="text-align:center;">Discover, borrow, and manage your favorite books with ease. Your next great read is just a tap away.</p>
+    </div>
+    <div style="padding:20px;">
+      <button class="btn btn-primary" onclick="go('login')">Get Started</button>
+    </div>
+  </div>
+
+  <!-- 2: Sign Up / Login -->
+  <div class="screen" id="screen-login">
+    <div class="header"><h1>Sign Up / Log In</h1></div>
+    <div class="content" style="display:flex; flex-direction:column;">
+      <input type="email" placeholder="Email" style="padding:12px;margin-top:16px;border:1px solid #999;border-radius:4px;font-size:13px;">
+      <input type="password" placeholder="Password" style="padding:12px;margin-top:12px;border:1px solid #999;border-radius:4px;font-size:13px;">
+      <button class="btn btn-primary" onclick="go('home')">Log In</button>
+      <button class="btn btn-secondary" onclick="go('home')">Sign Up</button>
+      <div style="flex:1;"></div>
+      <p style="text-align:center;"><a href="#" style="color:var(--blue);font-size:13px;" onclick="return false;">Forgot Password?</a></p>
+    </div>
+  </div>
+
+  <!-- 3: Home -->
+  <div class="screen" id="screen-home">
+    <div class="header">
+      <h1>Home</h1>
+      <button class="icon-btn" onclick="go('notifications')" title="Notifications">🔔</button>
+    </div>
+    <div class="content" style="flex:1;">
+      <div class="search-bar" onclick="go('search')">🔍&nbsp; Search for books...</div>
+      <div class="section-title">Recently Added</div>
+      <div id="recently-added"></div>
+      <div class="section-title">Popular Books</div>
+      <div id="popular-books"></div>
+    </div>
+    <div class="navbar" id="nav-home"></div>
+  </div>
+
+  <!-- 4: Search Results -->
+  <div class="screen" id="screen-search">
+    <div class="header">
+      <button class="back" onclick="go('home')">‹</button>
+      <h1>Search Results</h1>
+    </div>
+    <div class="content" style="flex:1;">
+      <div class="search-bar">🔍&nbsp; Search for books...</div>
+      <div id="search-results" style="margin-top:8px;"></div>
+    </div>
+    <div class="navbar" id="nav-search"></div>
+  </div>
+
+  <!-- 5: Book Details -->
+  <div class="screen" id="screen-details">
+    <div class="header">
+      <button class="back" onclick="goBack()">‹</button>
+      <h1>Book Details</h1>
+      <button class="icon-btn" title="Bookmark">🔖</button>
+    </div>
+    <div class="content" style="flex:1;">
+      <div class="placeholder-img" id="detail-cover" style="width:100px;height:130px;margin:0 auto 16px;"></div>
+      <h2 id="detail-title" style="text-align:center;margin:0 0 4px;"></h2>
+      <p style="text-align:center;color:var(--muted);font-size:13px;margin:0 0 6px;">By <span id="detail-author"></span></p>
+      <p class="rating" style="text-align:center;" id="detail-rating"></p>
+      <div class="section-title">Description</div>
+      <p class="desc" id="detail-desc"></p>
+      <div class="section-title">Availability</div>
+      <p style="font-size:13px;">Status: <span id="detail-status" style="font-weight:bold;"></span></p>
+      <button class="btn btn-primary" onclick="reserveBook()">Reserve</button>
+      <button class="btn btn-secondary" onclick="borrowBook()">Borrow</button>
+    </div>
+    <div class="navbar" id="nav-details"></div>
+  </div>
+
+  <!-- 6: Reservation Confirmation -->
+  <div class="screen center-col" id="screen-reserve-confirm">
+    <div class="header"><h1>Reservation Confirmation</h1></div>
+    <div class="content" style="flex:1;">
+      <div class="check-circle"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3"><path d="M4 12l6 6L20 6"/></svg></div>
+      <h2 style="text-align:center;margin:0 0 10px;">Reservation Confirmed!</h2>
+      <p class="desc" style="text-align:center;">Your reservation for "<span id="rc-title"></span>" has been successfully placed.</p>
+      <div class="card">
+        <div class="placeholder-img cover"></div>
+        <div>
+          <p style="font-weight:bold;font-size:13px;margin:0 0 4px;" id="rc-title2"></p>
+          <p style="font-size:12px;color:var(--muted);margin:0 0 4px;" id="rc-author"></p>
+          <p style="font-size:12px;color:var(--muted);margin:0;">Pickup by: <span id="rc-date"></span></p>
+        </div>
+      </div>
+      <button class="btn btn-primary" onclick="go('reservations')">View My Reservations</button>
+      <button class="btn btn-secondary" onclick="go('home')">Back to Home</button>
+    </div>
+  </div>
+
+  <!-- 7: Borrowing Confirmation -->
+  <div class="screen center-col" id="screen-borrow-confirm">
+    <div class="header"><h1>Borrowing Confirmation</h1></div>
+    <div class="content" style="flex:1;">
+      <div class="check-circle"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3"><path d="M4 12l6 6L20 6"/></svg></div>
+      <h2 style="text-align:center;margin:0 0 10px;">Book Borrowed Successfully!</h2>
+      <p class="desc" style="text-align:center;">You have successfully borrowed "<span id="bc-title"></span>". Please return it by <span id="bc-date"></span>.</p>
+      <div class="card">
+        <div class="placeholder-img cover"></div>
+        <div>
+          <p style="font-weight:bold;font-size:13px;margin:0 0 4px;" id="bc-title2"></p>
+          <p style="font-size:12px;color:var(--muted);margin:0;" id="bc-author"></p>
+        </div>
+      </div>
+      <button class="btn btn-primary" onclick="go('borrowed')">View Borrowed Books</button>
+      <button class="btn btn-secondary" onclick="go('home')">Back to Home</button>
+    </div>
+  </div>
+
+  <!-- 8: Profile -->
+  <div class="screen" id="screen-profile">
+    <div class="header">
+      <h1>Profile</h1>
+      <button class="icon-btn" onclick="go('settings')" title="Settings">⚙️</button>
+    </div>
+    <div class="content" style="flex:1;">
+      <div class="placeholder-img avatar"></div>
+      <h2 style="text-align:center;margin:0 0 2px;">John Doe</h2>
+      <p style="text-align:center;color:var(--muted);font-size:12px;margin:0 0 10px;">john.doe@example.com</p>
+
+      <div class="section-title" style="display:flex;justify-content:space-between;align-items:center;">
+        Borrowed Books <a href="#" style="font-size:11px;color:var(--blue);" onclick="go('borrowed');return false;">See all</a>
+      </div>
+      <div id="profile-borrowed"></div>
+
+      <div class="section-title" style="display:flex;justify-content:space-between;align-items:center;">
+        Reservations <a href="#" style="font-size:11px;color:var(--blue);" onclick="go('reservations');return false;">See all</a>
+      </div>
+      <div id="profile-reservations"></div>
+    </div>
+    <div class="navbar" id="nav-profile"></div>
+  </div>
+
+  <!-- 9: My Reservations -->
+  <div class="screen" id="screen-reservations">
+    <div class="header">
+      <button class="back" onclick="go('profile')">‹</button>
+      <h1>My Reservations</h1>
+    </div>
+    <div class="content" style="flex:1;" id="reservations-list"></div>
+    <div class="navbar" id="nav-reservations"></div>
+  </div>
+
+  <!-- 10: My Borrowed Books -->
+  <div class="screen" id="screen-borrowed">
+    <div class="header">
+      <button class="back" onclick="go('profile')">‹</button>
+      <h1>My Borrowed Books</h1>
+    </div>
+    <div class="content" style="flex:1;" id="borrowed-list"></div>
+    <div class="navbar" id="nav-borrowed"></div>
+  </div>
+
+  <!-- 11: Notifications -->
+  <div class="screen" id="screen-notifications">
+    <div class="header">
+      <button class="back" onclick="go('home')">‹</button>
+      <h1>Notifications</h1>
+    </div>
+    <div class="content" style="flex:1;">
+      <div class="notif-item unread">
+        <div class="notif-title"><span class="dot"></span>Reservation ready for pickup</div>
+        <div class="notif-body">"The Great Gatsby" is waiting at the desk.</div>
+        <div class="notif-time">2 hours ago</div>
+      </div>
+      <div class="notif-item unread">
+        <div class="notif-title"><span class="dot"></span>Book due tomorrow</div>
+        <div class="notif-body">"1984" is due back on 2024-01-15.</div>
+        <div class="notif-time">1 day ago</div>
+      </div>
+      <div class="notif-item">
+        <div class="notif-title">New arrivals this week</div>
+        <div class="notif-body">12 new titles just added to the catalogue.</div>
+        <div class="notif-time">3 days ago</div>
+      </div>
+      <div class="notif-item">
+        <div class="notif-title">Reservation confirmed</div>
+        <div class="notif-body">Your reservation for "To Kill a Mockingbird".</div>
+        <div class="notif-time">5 days ago</div>
+      </div>
+    </div>
+    <div class="navbar" id="nav-notifications"></div>
+  </div>
+
+  <!-- 12: Settings -->
+  <div class="screen" id="screen-settings">
+    <div class="header">
+      <button class="back" onclick="go('profile')">‹</button>
+      <h1>Settings</h1>
+    </div>
+    <div class="content" style="flex:1;">
+      <div class="settings-row">Edit Profile <span>›</span></div>
+      <div class="settings-row">Notification Preferences <span>›</span></div>
+      <div class="settings-row">Change Password <span>›</span></div>
+      <div class="settings-row">About / Help <span>›</span></div>
+      <button class="btn btn-danger-outline" style="margin-top:30px;" onclick="go('welcome')">Log Out</button>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+</div>
+
+<script>
+/* ---------- data ---------- */
+const CATALOGUE = [
+  {id:1, title:"The Great Adventure", author:"Jane Doe", status:"Available", rating:"★ 4.5 (120 ratings)",
+   desc:"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."},
+  {id:2, title:"Mystery of the Old House", author:"John Smith", status:"Available", rating:"★ 4.2 (88 ratings)",
+   desc:"A gripping mystery set in a decaying mansion, where every room holds a clue and every clue holds a secret."},
+  {id:3, title:"Science Fiction Wonders", author:"A.B. Writer", status:"Available", rating:"★ 4.7 (203 ratings)",
+   desc:"An anthology exploring distant galaxies, strange technologies, and the limits of human imagination."},
+  {id:4, title:"The Great Gatsby", author:"F. Scott Fitzgerald", status:"Available", rating:"★ 4.6 (980 ratings)",
+   desc:"A portrait of the Jazz Age, following Jay Gatsby's obsessive pursuit of a lost love and the American dream."},
+  {id:5, title:"1984", author:"George Orwell", status:"Available", rating:"★ 4.8 (1240 ratings)",
+   desc:"A dystopian vision of a totalitarian future where independent thought is the ultimate act of rebellion."},
+  {id:6, title:"To Kill a Mockingbird", author:"Harper Lee", status:"Available", rating:"★ 4.9 (1560 ratings)",
+   desc:"A young girl's coming-of-age story set against a wrongful conviction trial in the American South."},
+  {id:7, title:"The Catcher in the Rye", author:"J.D. Salinger", status:"Available", rating:"★ 4.1 (740 ratings)",
+   desc:"A restless teenager wanders New York City, grappling with alienation and the loss of innocence."},
+];
+
+let reservations = [];  // {book, pickupDate}
+let borrowed = [];      // {book, dueDate}
+let currentBook = null;
+let cameFrom = 'home';  // where "back" on Book Details should return to
+let history = ['splash'];
+
+/* ---------- rendering helpers ---------- */
+function coverEl(){
+  const d = document.createElement('div');
+  d.className = 'placeholder-img cover';
+  return d;
+}
+
+function bookRow(book, w=50, h=65){
+  const row = document.createElement('div');
+  row.className = 'book-row';
+  row.onclick = () => openDetails(book);
+  const cov = document.createElement('div');
+  cov.className='placeholder-img cover';
+  cov.style.width=w+'px'; cov.style.height=h+'px';
+  row.innerHTML = `<div class="info">
+      <p class="title">${book.title}</p>
+      <p class="author">${book.author}</p>
+      <p class="status">${book.status}</p>
+    </div>`;
+  row.prepend(cov);
+  return row;
+}
+
+function renderHome(){
+  const ra = document.getElementById('recently-added');
+  const pb = document.getElementById('popular-books');
+  ra.innerHTML = ''; pb.innerHTML = '';
+  [CATALOGUE[0], CATALOGUE[1]].forEach(b=>ra.appendChild(bookRow(b)));
+  [CATALOGUE[2], CATALOGUE[3]].forEach(b=>pb.appendChild(bookRow(b)));
+}
+
+function renderSearch(){
+  const el = document.getElementById('search-results');
+  el.innerHTML = '';
+  CATALOGUE.forEach(b=>el.appendChild(bookRow(b)));
+}
+
+function renderProfileLists(){
+  const pb = document.getElementById('profile-borrowed');
+  const pr = document.getElementById('profile-reservations');
+  pb.innerHTML = borrowed.length ? '' : '<p class="empty-hint">No borrowed books yet</p>';
+  pr.innerHTML = reservations.length ? '' : '<p class="empty-hint">No reservations yet</p>';
+  borrowed.slice(0,2).forEach(item=>{
+    const row = bookRow(item.book);
+    row.querySelector('.status').textContent = 'Due: ' + item.dueDate;
+    pb.appendChild(row);
+  });
+  reservations.slice(0,2).forEach(item=>{
+    const row = bookRow(item.book);
+    row.querySelector('.status').textContent = 'Pickup by: ' + item.pickupDate;
+    pr.appendChild(row);
+  });
+}
+
+function renderReservationsList(){
+  const el = document.getElementById('reservations-list');
+  el.innerHTML = '';
+  if(!reservations.length){ el.innerHTML = '<p class="empty-hint">No reservations yet — go reserve a book!</p>'; return; }
+  reservations.forEach((item, idx)=>{
+    const li = document.createElement('div'); li.className='list-item';
+    li.appendChild(coverEl());
+    const info = document.createElement('div'); info.className='info';
+    info.innerHTML = `<p style="font-weight:bold;font-size:13px;margin:0 0 4px;">${item.book.title}</p>
+      <p style="font-size:12px;color:var(--muted);margin:0 0 4px;">${item.book.author}</p>
+      <p style="font-size:12px;color:#555;margin:0 0 8px;">Pickup by: <span style="color:var(--blue);">${item.pickupDate}</span></p>`;
+    const cancelBtn = document.createElement('button');
+    cancelBtn.className='btn btn-danger-outline btn-small';
+    cancelBtn.textContent='Cancel Reservation';
+    cancelBtn.onclick = ()=>{ reservations.splice(idx,1); renderReservationsList(); renderProfileLists(); showToast('Reservation cancelled'); };
+    info.appendChild(cancelBtn);
+    li.appendChild(info);
+    el.appendChild(li);
+  });
+}
+
+function renderBorrowedList(){
+  const el = document.getElementById('borrowed-list');
+  el.innerHTML = '';
+  if(!borrowed.length){ el.innerHTML = '<p class="empty-hint">No borrowed books yet — go borrow one!</p>'; return; }
+  borrowed.forEach((item)=>{
+    const li = document.createElement('div'); li.className='list-item';
+    li.appendChild(coverEl());
+    const info = document.createElement('div'); info.className='info';
+    info.innerHTML = `<p style="font-weight:bold;font-size:13px;margin:0 0 4px;">${item.book.title}</p>
+      <p style="font-size:12px;color:var(--muted);margin:0 0 4px;">${item.book.author}</p>
+      <p style="font-size:12px;color:#555;margin:0 0 8px;">Due: <span style="color:#cc7a00;">${item.dueDate}</span></p>`;
+    const renewBtn = document.createElement('button');
+    renewBtn.className='btn btn-secondary btn-small';
+    renewBtn.textContent='Renew';
+    renewBtn.onclick = ()=>{ showToast('Renewed until ' + bumpDate(item.dueDate)); item.dueDate = bumpDate(item.dueDate); renderBorrowedList(); };
+    info.appendChild(renewBtn);
+    li.appendChild(info);
+    el.appendChild(li);
+  });
+}
+
+function bumpDate(d){
+  const dt = new Date(d); dt.setDate(dt.getDate()+14);
+  return dt.toISOString().slice(0,10);
+}
+function futureDate(days){
+  const dt = new Date(); dt.setDate(dt.getDate()+days);
+  return dt.toISOString().slice(0,10);
+}
+
+/* ---------- navbar ---------- */
+const NAV_HOME_SVG = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 11l8-7 8 7v9a1 1 0 0 1-1 1h-4v-6H9v6H5a1 1 0 0 1-1-1z"/></svg>`;
+const NAV_SEARCH_SVG = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="11" cy="11" r="6"/><line x1="16" y1="16" x2="21" y2="21"/></svg>`;
+const NAV_PROFILE_SVG = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 4-6 8-6s8 2 8 6"/></svg>`;
+
+function buildNavbars(){
+  const ids = ['nav-home','nav-search','nav-details','nav-profile','nav-reservations','nav-borrowed','nav-notifications'];
+  ids.forEach(id=>{
+    const el = document.getElementById(id);
+    if(!el) return;
+    el.innerHTML = `
+      <button data-tab="home">${NAV_HOME_SVG}<span>Home</span></button>
+      <button data-tab="search">${NAV_SEARCH_SVG}<span>Search</span></button>
+      <button data-tab="profile">${NAV_PROFILE_SVG}<span>Profile</span></button>`;
+    el.querySelectorAll('button').forEach(btn=>{
+      btn.onclick = ()=>go(btn.dataset.tab);
+    });
+  });
+}
+
+function highlightNav(active){
+  document.querySelectorAll('.navbar').forEach(nb=>{
+    nb.querySelectorAll('button').forEach(btn=>{
+      btn.classList.toggle('active', btn.dataset.tab === active);
+    });
+  });
+}
+
+/* ---------- navigation ---------- */
+function go(screenId, opts={}){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  const target = document.getElementById('screen-' + screenId);
+  if(target) target.classList.add('active');
+  history.push(screenId);
+
+  if(screenId==='home'){ renderHome(); highlightNav('home'); }
+  if(screenId==='search'){ renderSearch(); highlightNav('search'); }
+  if(screenId==='details'){ highlightNav(null); }
+  if(screenId==='profile'){ renderProfileLists(); highlightNav('profile'); }
+  if(screenId==='reservations'){ renderReservationsList(); highlightNav('profile'); }
+  if(screenId==='borrowed'){ renderBorrowedList(); highlightNav('profile'); }
+  if(screenId==='notifications'){ highlightNav(null); }
+}
+
+function goBack(){ go(cameFrom); }
+
+function openDetails(book){
+  currentBook = book;
+  cameFrom = history[history.length-1] || 'home';
+  document.getElementById('detail-cover').style.width='100px';
+  document.getElementById('detail-cover').style.height='130px';
+  document.getElementById('detail-title').textContent = book.title;
+  document.getElementById('detail-author').textContent = book.author;
+  document.getElementById('detail-rating').textContent = book.rating;
+  document.getElementById('detail-desc').textContent = book.desc;
+  document.getElementById('detail-status').textContent = book.status;
+  document.getElementById('detail-status').style.color = book.status==='Available' ? 'var(--green)' : '#cc7a00';
+  go('details');
+}
+
+function reserveBook(){
+  if(!currentBook) return;
+  const pickup = futureDate(5);
+  reservations.push({book: currentBook, pickupDate: pickup});
+  document.getElementById('rc-title').textContent = currentBook.title;
+  document.getElementById('rc-title2').textContent = currentBook.title;
+  document.getElementById('rc-author').textContent = currentBook.author;
+  document.getElementById('rc-date').textContent = pickup;
+  go('reserve-confirm');
+}
+
+function borrowBook(){
+  if(!currentBook) return;
+  const due = futureDate(14);
+  borrowed.push({book: currentBook, dueDate: due});
+  document.getElementById('bc-title').textContent = currentBook.title;
+  document.getElementById('bc-title2').textContent = currentBook.title;
+  document.getElementById('bc-author').textContent = currentBook.author;
+  document.getElementById('bc-date').textContent = due;
+  go('borrow-confirm');
+}
+
+function showToast(msg){
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'), 1800);
+}
+
+/* ---------- init ---------- */
+buildNavbars();
+renderHome();
+</script>
+
+</body>
+</html>
