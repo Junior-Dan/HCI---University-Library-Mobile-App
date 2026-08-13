@@ -163,12 +163,28 @@
       <input type="email" placeholder="Email" style="padding:12px;margin-top:16px;border:1px solid #999;border-radius:4px;font-size:13px;">
       <input type="password" placeholder="Password" style="padding:12px;margin-top:12px;border:1px solid #999;border-radius:4px;font-size:13px;">
       <button class="btn btn-primary" onclick="go('home')">Log In</button>
-      <button class="btn btn-secondary" onclick="go('home')">Sign Up</button>
+      <button class="btn btn-secondary" onclick="go('signup')">Sign Up</button>
       <div style="flex:1;"></div>
       <p style="text-align:center;"><a href="#" style="color:var(--blue);font-size:13px;" onclick="return false;">Forgot Password?</a></p>
     </div>
   </div>
 
+    <!-- Sign Up Screen -->
+  <div class="screen" id="screen-signup">
+    <div class="header">
+      <button class="back" onclick="go('login')">‹</button>
+      <h1>Sign Up</h1>
+    </div>
+    <div class="content" style="display:flex; flex-direction:column;">
+      <input type="text" placeholder="Full Name" style="padding:12px;margin-top:16px;border:1px solid #999;border-radius:4px;font-size:13px;">
+      <input type="email" placeholder="Email" style="padding:12px;margin-top:12px;border:1px solid #999;border-radius:4px;font-size:13px;">
+      <input type="password" placeholder="Password" style="padding:12px;margin-top:12px;border:1px solid #999;border-radius:4px;font-size:13px;">
+      <input type="password" placeholder="Confirm Password" style="padding:12px;margin-top:12px;border:1px solid #999;border-radius:4px;font-size:13px;">
+      <button class="btn btn-primary" onclick="go('home')">Create Account</button>
+      <button class="btn btn-secondary" onclick="go('login')">Already have an account? Log In</button>
+    </div>
+  </div>
+  
   <!-- 3: Home -->
   <div class="screen" id="screen-home">
     <div class="header">
