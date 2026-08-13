@@ -6,17 +6,6 @@
 
 A mobile app concept that lets university library patrons browse the catalogue, check book availability, reserve or borrow titles, and manage their account — all from their phone, without needing to visit the library desk to find out if a book is in.
 
-### Team
-
-| Name | Role / contributions |
-|------|----------------------|
-| [Name 1] | e.g. Wireframes (screens 1–6), README |
-| [Name 2] | e.g. Prototype linking, usability testing |
-| [Name 3] | e.g. Screens 7–13, test synthesis |
-
-*(List every member here. Each name should map to commits/PRs in this repo — that's how "meaningful contribution" gets verified.)*
-
----
 
 ### Problem
 
